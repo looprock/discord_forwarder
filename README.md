@@ -14,4 +14,17 @@ Set the environment variables:
 
 From docker, something like:
 
+```
 docker run -e DF_TOKEN=YouRSeCrEtTokeN -e DF_CHANNELS="8944734637383939393727, 8474636338374746" -e DF_MESSAGE="Hello World" webuildevops/discord_forwarder:latest
+```
+
+# github actions usage
+
+```
+      - name: send a discord message
+        uses: docker://webuilddevops/discord_forwarder
+        env:
+          DF_TOKEN: ${{ secrets.DISCORD_FORWARDER_TOKEN }}
+          DF_CHANNELS: "8944734637383939393727, 8474636338374746"
+          DF_MESSAGE: Good news, a new release was pushed: https://github.com/user/repo/actions/runs/${{ github.run_id }}
+```
