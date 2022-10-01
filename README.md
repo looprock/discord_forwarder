@@ -4,6 +4,8 @@ A simple CLI for posting messages to a discord channel
 # usage
 This script was designed to be used with github actions, hence the somewhat odd decision to make everything environment variables.
 
+First you need to create a bot account. Instructions can be found here: https://discordpy.readthedocs.io/en/latest/discord.html
+
 Set the environment variables:
 
 *DF_TOKEN* - Discord OAUTH Token
