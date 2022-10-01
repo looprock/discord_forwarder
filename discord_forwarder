@@ -8,17 +8,33 @@ import datetime
 
 '''discord_forwarder is a CLI for posting to a discord channel'''
 
-if len(sys.argv) < 3:
-    sys.exit(f"USAGE: {sys.argv[0]} <comma separated list of channel IDs> <message>")
-
 base_url = 'https://discord.com/api'
 
+env_var_err = False
 # read the bot token from env var
-bot_token=os.environ.get('BOT_TOKEN')
-if not bot_token:
-    sys.exit("ERROR: you must define the environment variable BOT_TOKEN")
+df_token=os.environ.get('DF_TOKEN')
+# print(f"DEBUG: DF_TOKEN={df_token}")
+if not df_token:
+    print("ERROR: you must define the environment variable DF_TOKEN")
+    env_var_err = True
 
-headers = {"Authorization": f"Bot {bot_token}"} 
+df_channels=os.environ.get('DF_CHANNELS')
+# print(f"DEBUG: DF_CHANNELS={df_channels}")
+if not df_channels:
+    print("ERROR: you must define the environment variable DF_CHANNELS")
+    env_var_err = True
+
+df_message=os.environ.get('DF_MESSAGE')
+# print(f"DEBUG: DF_MESSAGE={df_message}")
+if not df_message:
+    print("ERROR: you must define the environment variable DF_MESSAGE")
+    env_var_err = True
+
+if env_var_err:
+    sys.exit(1)
+
+
+headers = {"Authorization": f"Bot {df_token}"} 
 
 def get_channel_list(channels: str) -> (List):
     '''Validate that the channels string can be converted into a list of ints.'''
@@ -30,9 +46,7 @@ def get_channel_list(channels: str) -> (List):
         sys.exit(f"ERROR: invalid channel list: {channels}")
     return channel_list
 
-# I was going to pass in channels as an environment variable but decided to pass them in as an argument instead:
-# channels=os.environ.get('CHANNELS')
-channel_ids=get_channel_list(sys.argv[1])
+channel_ids=get_channel_list(df_channels)
 
 def post_to_channel(channel_id: str, message: str):
     '''Submit a message to a discord channel.'''
@@ -53,7 +67,7 @@ def post_to_channel(channel_id: str, message: str):
 
 if __name__ == "__main__":
     for channel in channel_ids:
-        post_to_channel(channel, sys.argv[2])
+        post_to_channel(channel, df_message)
 
 
 

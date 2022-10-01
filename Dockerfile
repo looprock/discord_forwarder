@@ -4,3 +4,5 @@ COPY discord_forwarder /usr/bin/discord_forwarder
 
 RUN pip install requests \
 && chmod +x /usr/bin/discord_forwarder
+
+ENTRYPOINT [ "/usr/bin/discord_forwarder" ]
