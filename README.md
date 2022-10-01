@@ -2,6 +2,7 @@
 A simple CLI for posting messages to a discord channel
 
 # usage
+This script was designed to be used with github actions, hence the somewhat odd decision to make everything environment variables.
 
 Set the environment variables:
 
@@ -13,4 +14,4 @@ Set the environment variables:
 
 From docker, something like:
 
-docker run -e DF_TOKEN=YouRSeCrEtTokeN -e DF_CHANNELS="8944734637383939393727" -e DF_MESSAGE="Hello World" webuildevops/discord_forwarder:latest
+docker run -e DF_TOKEN=YouRSeCrEtTokeN -e DF_CHANNELS="8944734637383939393727, 8474636338374746" -e DF_MESSAGE="Hello World" webuildevops/discord_forwarder:latest
