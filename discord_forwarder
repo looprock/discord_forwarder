@@ -4,30 +4,35 @@ import os
 import sys
 from typing import List
 import requests
-import datetime
+import logging
 
 '''discord_forwarder is a CLI for posting to a discord channel'''
 
 base_url = 'https://discord.com/api'
 
+if os.environ.get('DEBUG'):
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.DEBUG)
+else:
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
+
 env_var_err = False
 # read the bot token from env var
 df_token=os.environ.get('DF_TOKEN')
-# print(f"DEBUG: DF_TOKEN={df_token}")
+logging.debug(f"DF_TOKEN={df_token}")
 if not df_token:
-    print("ERROR: you must define the environment variable DF_TOKEN")
+    logging.error("you must define the environment variable DF_TOKEN")
     env_var_err = True
 
 df_channels=os.environ.get('DF_CHANNELS')
-# print(f"DEBUG: DF_CHANNELS={df_channels}")
+logging.debug(f"DF_CHANNELS={df_channels}")
 if not df_channels:
-    print("ERROR: you must define the environment variable DF_CHANNELS")
+    logging.error("you must define the environment variable DF_CHANNELS")
     env_var_err = True
 
 df_message=os.environ.get('DF_MESSAGE')
-# print(f"DEBUG: DF_MESSAGE={df_message}")
+logging.debug(f"DF_MESSAGE={df_message}")
 if not df_message:
-    print("ERROR: you must define the environment variable DF_MESSAGE")
+    logging.error("you must define the environment variable DF_MESSAGE")
     env_var_err = True
 
 if env_var_err:
@@ -43,27 +48,29 @@ def get_channel_list(channels: str) -> (List):
         for channel in channels.split(","):
             channel_list.append(int(channel.strip()))
     except:
-        sys.exit(f"ERROR: invalid channel list: {channels}")
+        logging.error(f"invalid channel list: {channels}")
+        sys.exit(1)
     return channel_list
 
 channel_ids=get_channel_list(df_channels)
 
 def post_to_channel(channel_id: str, message: str):
     '''Submit a message to a discord channel.'''
-    log_date = datetime.datetime.now()
     path = f'/channels/{channel_id}/messages'
     full_url = f"{base_url}{path}"
+    logging.debug(f"full_url: {full_url}")
     data={
         "content": message
-    }  
+    }
+    logging.debug(data)
     try:
         response  = requests.post(full_url, headers=headers, json=data)
         response.raise_for_status()
-        print(f"{log_date} INFO: {full_url} status code: {response.status_code}")
+        logging.info(f"{full_url} status code: {response.status_code}")
     except requests.exceptions.HTTPError as e:
-        print(f"{log_date} ERROR: {e}", file=sys.stderr)
+        logging.error(e, file=sys.stderr)
     except requests.exceptions.RequestException as e:
-        print(f"{log_date} ERROR: {e}", file=sys.stderr)
+        logging.error(e, file=sys.stderr)
 
 if __name__ == "__main__":
     for channel in channel_ids:
