@@ -16,7 +16,7 @@ else:
     logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
 env_var_err = False
-# read required env vars
+# read required env vars and generate lowercased versions of global vars from them
 vars = ['DF_TOKEN','DF_CHANNELS','DF_MESSAGE']
 for v in vars:
     globals()[v.lower()]=os.environ.get(v)
