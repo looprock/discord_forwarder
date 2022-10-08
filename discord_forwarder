@@ -16,24 +16,13 @@ else:
     logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
 env_var_err = False
-# read the bot token from env var
-df_token=os.environ.get('DF_TOKEN')
-logging.debug(f"DF_TOKEN={df_token}")
-if not df_token:
-    logging.error("you must define the environment variable DF_TOKEN")
-    env_var_err = True
-
-df_channels=os.environ.get('DF_CHANNELS')
-logging.debug(f"DF_CHANNELS={df_channels}")
-if not df_channels:
-    logging.error("you must define the environment variable DF_CHANNELS")
-    env_var_err = True
-
-df_message=os.environ.get('DF_MESSAGE')
-logging.debug(f"DF_MESSAGE={df_message}")
-if not df_message:
-    logging.error("you must define the environment variable DF_MESSAGE")
-    env_var_err = True
+# read required env vars
+vars = ['DF_TOKEN','DF_CHANNELS','DF_MESSAGE']
+for v in vars:
+    globals()[v.lower()]=os.environ.get(v)
+    if not globals()[v.lower()]:
+        logging.error(f"you must define the environment variable {v}")
+        env_var_err = True
 
 if env_var_err:
     sys.exit(1)
